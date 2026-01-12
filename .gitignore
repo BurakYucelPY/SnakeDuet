@@ -1,0 +1,9 @@
+# Python cache dosyaları
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Sistem dosyaları
+.DS_Store
+Thumbs.db
