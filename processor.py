@@ -18,6 +18,10 @@ class VideoIsleyici(VideoTransformerBase):
         self.yilan_sag = Yilan(self.OYUN_GENISLIK - 100, 240, (0, 0, 255))
         self.yem = Yem(self.OYUN_GENISLIK, self.OYUN_YUKSEKLIK)
 
+        # Oyun Durumu
+        self.oyun_basladi = False
+        self.baslangic_sayaci = 0
+
     def transform(self, frame):
         img = frame.to_ndarray(format="bgr24")
         img = cv2.flip(img, 1)
@@ -65,18 +69,36 @@ class VideoIsleyici(VideoTransformerBase):
                     mp_draw.draw_landmarks(img, el_noktalari, mp_hands.HAND_CONNECTIONS)
                     cv2.putText(sag_kamera, f"YON: {yon}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-        self.yem.ciz(oyun_tahtasi, cv2)
-        self.yilan_sol.hareket_et(sol_komut, self.OYUN_GENISLIK, h)
-        if self.yilan_sol.yedi_mi(self.yem):
-            self.yem.spawn()
-        self.yilan_sol.ciz(oyun_tahtasi, cv2)
-        self.yilan_sag.hareket_et(sag_komut, self.OYUN_GENISLIK, h)
-        if self.yilan_sag.yedi_mi(self.yem):
-            self.yem.spawn()
-        self.yilan_sag.ciz(oyun_tahtasi, cv2)
+        if not self.oyun_basladi:
+            # Giriş Ekranı
+            cv2.putText(oyun_tahtasi, "SNAKE DUET", (150, 200), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 4)
+            
+            if sonuc.multi_hand_landmarks:
+                self.baslangic_sayaci += 1
+                kalan_sure = 30 - self.baslangic_sayaci
+                if kalan_sure > 0:
+                    cv2.putText(oyun_tahtasi, f"BASLIYOR: {kalan_sure // 10 + 1}", (220, 300), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                else:
+                    self.oyun_basladi = True
+                    self.baslangic_sayaci = 0
+            else:
+                self.baslangic_sayaci = 0
+                cv2.putText(oyun_tahtasi, "ELLERINI GOSTER", (180, 300), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+        
+        else:
+            # Oyun Mantığı
+            self.yem.ciz(oyun_tahtasi, cv2)
+            self.yilan_sol.hareket_et(sol_komut, self.OYUN_GENISLIK, h)
+            if self.yilan_sol.yedi_mi(self.yem):
+                self.yem.spawn()
+            self.yilan_sol.ciz(oyun_tahtasi, cv2)
+            self.yilan_sag.hareket_et(sag_komut, self.OYUN_GENISLIK, h)
+            if self.yilan_sag.yedi_mi(self.yem):
+                self.yem.spawn()
+            self.yilan_sag.ciz(oyun_tahtasi, cv2)
 
-        cv2.putText(oyun_tahtasi, str(self.yilan_sol.skor), (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 3)
-        cv2.putText(oyun_tahtasi, str(self.yilan_sag.skor), (self.OYUN_GENISLIK - 60, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 3)
+            cv2.putText(oyun_tahtasi, str(self.yilan_sol.skor), (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 3)
+            cv2.putText(oyun_tahtasi, str(self.yilan_sag.skor), (self.OYUN_GENISLIK - 60, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 3)
 
         sol_kamera_guncel = img[:, :kamera_orta]
         sag_kamera_guncel = img[:, kamera_orta:]
