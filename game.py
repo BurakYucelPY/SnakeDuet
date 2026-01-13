@@ -66,6 +66,46 @@ class Yilan:
             return True
         return False
 
+    def carpti_mi(self, diger_yilan):
+        """Diğer yılana çarpıp çarpmadığını kontrol eder"""
+        if not self.hayatta:
+            return False
+        
+        kafa_x, kafa_y = self.govde[0]
+        
+        # Diğer yılanın tüm gövdesine çarpma kontrolü
+        for parca in diger_yilan.govde:
+            mesafe = math.sqrt((kafa_x - parca[0])**2 + (kafa_y - parca[1])**2)
+            if mesafe < 12:  # Çarpışma mesafesi
+                self.hayatta = False
+                return True
+        
+        return False
+
+    def kendine_carpti_mi(self):
+        """Kendi gövdesine çarpıp çarpmadığını kontrol eder"""
+        if not self.hayatta or len(self.govde) < 4:
+            return False
+        
+        kafa_x, kafa_y = self.govde[0]
+        
+        # İlk 3 parçayı atla (kafa ve hemen arkası)
+        for parca in self.govde[3:]:
+            mesafe = math.sqrt((kafa_x - parca[0])**2 + (kafa_y - parca[1])**2)
+            if mesafe < 10:
+                self.hayatta = False
+                return True
+        
+        return False
+
+    def reset(self, baslangic_x, baslangic_y):
+        """Yılanı başlangıç durumuna sıfırlar"""
+        self.govde = [(baslangic_x, baslangic_y)]
+        self.yon = "DURUYOR"
+        self.hayatta = True
+        self.skor = 0
+        self.buyu = False
+
     def ciz(self, img, cv2):
         if not self.hayatta:
             return
