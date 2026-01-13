@@ -39,9 +39,15 @@ class Yilan:
         elif self.yon == "YUKARI": bas_y -= hiz
         elif self.yon == "ASAGI": bas_y += hiz
 
-        if bas_x < 0 or bas_x > ekran_genislik or bas_y < 0 or bas_y > ekran_yukseklik:
-            self.hayatta = False
-            return
+        # Ekran sınırlarını geçince karşı taraftan devam et
+        if bas_x < 0:
+            bas_x = ekran_genislik
+        elif bas_x > ekran_genislik:
+            bas_x = 0
+        if bas_y < 0:
+            bas_y = ekran_yukseklik
+        elif bas_y > ekran_yukseklik:
+            bas_y = 0
 
         self.govde.insert(0, (bas_x, bas_y))
 
