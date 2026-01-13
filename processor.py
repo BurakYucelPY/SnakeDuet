@@ -14,6 +14,7 @@ class VideoIsleyici(VideoTransformerBase):
         )
         self.OYUN_GENISLIK = 600
         self.OYUN_YUKSEKLIK = 480
+        self.KARE_BOYUTU = 20  # Grid kare boyutu
         self.yilan_sol = Yilan(100, 240, (0, 255, 0))
         self.yilan_sag = Yilan(self.OYUN_GENISLIK - 100, 240, (0, 0, 255))
         self.yem = Yem(self.OYUN_GENISLIK, self.OYUN_YUKSEKLIK)
@@ -21,6 +22,25 @@ class VideoIsleyici(VideoTransformerBase):
         # Oyun Durumu
         self.oyun_basladi = False
         self.baslangic_sayaci = 0
+
+    def ciz_neon_grid(self, img):
+        """Mavi neon kareli zemin çizer"""
+        h, w = img.shape[:2]
+
+        img[:] = (10, 10, 20)
+
+        neon_mavi = (255, 150, 0)  
+        koyu_mavi = (80, 40, 0)    
+
+        for x in range(0, w, self.KARE_BOYUTU):
+            cv2.line(img, (x, 0), (x, h), koyu_mavi, 1)
+
+        for y in range(0, h, self.KARE_BOYUTU):
+            cv2.line(img, (0, y), (w, y), koyu_mavi, 1)
+
+        cv2.rectangle(img, (2, 2), (w-3, h-3), neon_mavi, 2)
+        
+        return img
 
     def transform(self, frame):
         img = frame.to_ndarray(format="bgr24")
@@ -31,6 +51,7 @@ class VideoIsleyici(VideoTransformerBase):
         sag_kamera = img[:, kamera_orta:]
 
         oyun_tahtasi = np.zeros((h, self.OYUN_GENISLIK, 3), dtype=np.uint8)
+        self.ciz_neon_grid(oyun_tahtasi)
         
         self.yem.ekran_w = self.OYUN_GENISLIK
         self.yem.ekran_h = h
