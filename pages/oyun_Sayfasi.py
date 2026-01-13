@@ -104,6 +104,18 @@ st.markdown("""
         border: none !important;
         border-radius: 8px !important;
     }
+    
+    /* Tekrar oyna butonu */
+    .restart-btn > button {
+        background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%) !important;
+        color: #000000 !important;
+        padding: 1rem 3rem !important;
+        font-size: 1.2rem !important;
+        font-weight: bold !important;
+        border: none !important;
+        border-radius: 10px !important;
+        margin-top: 1rem !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -138,6 +150,15 @@ webrtc_ctx = webrtc_streamer(
 )
 
 st.markdown('</div>', unsafe_allow_html=True)
+
+# Tekrar oyna butonu
+col1, col2, col3 = st.columns([1, 1, 1])
+with col2:
+    st.markdown('<div class="restart-btn">', unsafe_allow_html=True)
+    if st.button("TEKRAR OYNA", key="restart", use_container_width=True):
+        # Sayfayı yeniden yükle - bu webrtc'yi sıfırlar
+        st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Oyun durumu bilgisi
 if not webrtc_ctx.state.playing:
