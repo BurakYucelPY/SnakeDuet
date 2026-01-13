@@ -10,7 +10,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from utils.styles import (
     apply_common_styles,
-    render_footer
+    render_footer,
+    set_background_image
 )
 
 # Sayfa ayarları
@@ -21,14 +22,12 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Koyu arkaplan stili
-st.markdown("""
-<style>
-    .stApp {
-        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
-    }
-</style>
-""", unsafe_allow_html=True)
+# Arkaplan görselini ayarla
+ASSETS_PATH = Path(__file__).parent.parent / "assets"
+BACKGROUND_IMAGE = ASSETS_PATH / "nasiloynanirFoto.png"
+
+if BACKGROUND_IMAGE.exists():
+    set_background_image(str(BACKGROUND_IMAGE))
 
 # Ortak stilleri uygula
 apply_common_styles()
