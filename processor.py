@@ -46,15 +46,19 @@ class VideoIsleyici(VideoTransformerBase):
         img = frame.to_ndarray(format="bgr24")
         img = cv2.flip(img, 1)
         h, w, _ = img.shape
+
+        img = cv2.resize(img, (640, self.OYUN_YUKSEKLIK))
+        h, w, _ = img.shape
+        
         kamera_orta = w // 2
         sol_kamera = img[:, :kamera_orta]
         sag_kamera = img[:, kamera_orta:]
 
-        oyun_tahtasi = np.zeros((h, self.OYUN_GENISLIK, 3), dtype=np.uint8)
+        oyun_tahtasi = np.zeros((self.OYUN_YUKSEKLIK, self.OYUN_GENISLIK, 3), dtype=np.uint8)
         self.ciz_neon_grid(oyun_tahtasi)
         
         self.yem.ekran_w = self.OYUN_GENISLIK
-        self.yem.ekran_h = h
+        self.yem.ekran_h = self.OYUN_YUKSEKLIK
 
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         sonuc = self.hands.process(img_rgb)
@@ -109,11 +113,11 @@ class VideoIsleyici(VideoTransformerBase):
         else:
             # Oyun Mantığı
             self.yem.ciz(oyun_tahtasi, cv2)
-            self.yilan_sol.hareket_et(sol_komut, self.OYUN_GENISLIK, h)
+            self.yilan_sol.hareket_et(sol_komut, self.OYUN_GENISLIK, self.OYUN_YUKSEKLIK)
             if self.yilan_sol.yedi_mi(self.yem):
                 self.yem.spawn()
             self.yilan_sol.ciz(oyun_tahtasi, cv2)
-            self.yilan_sag.hareket_et(sag_komut, self.OYUN_GENISLIK, h)
+            self.yilan_sag.hareket_et(sag_komut, self.OYUN_GENISLIK, self.OYUN_YUKSEKLIK)
             if self.yilan_sag.yedi_mi(self.yem):
                 self.yem.spawn()
             self.yilan_sag.ciz(oyun_tahtasi, cv2)
