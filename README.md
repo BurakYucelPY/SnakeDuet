@@ -35,7 +35,11 @@
 ## 🎬 Oynayış Videosu
 
 <p align="center">
-  <video src="readMeImage/SnakeDuet.mp4" width="85%" controls style="border-radius: 10px;"></video>
+  <a href="https://github.com/BurakYucelPY/SnakeDuet/raw/main/readMeImage/SnakeDuet.mp4">
+    <img src="readMeImage/oyunIci.png" alt="Oynayış Videosu - Tıkla ve İzle" width="85%" style="border-radius: 10px;">
+  </a>
+  <br/>
+  <em>📹 Videoyu izlemek için resme tıklayın</em>
 </p>
 
 ## 🖼️ Ekran Görüntüleri
