@@ -35,7 +35,7 @@
 ## 🎬 Oynayış Videosu
 
 <p align="center">
-  <video src="https://github.com/user-attachments/assets/83b0a265-33db-4b29-9ec8-2871411ccda6" width="85%" controls></video>
+  <video src="https://github.com/user-attachments/assets/a6a9de3d-a5b1-4722-80b3-a50945a3331e" width="85%" controls></video>
 </p>
 
 ## 🖼️ Ekran Görüntüleri
